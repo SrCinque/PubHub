@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  posts         Post[]    // Relacionamento com as postagens criadas
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String  // "linkedin", "reddit", etc.
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  createdAt    String
+  expires      DateTime
+  updatedAt    DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// -----------------------------------------
+// 2. ENTIDADES DE DOMÍNIO (Regra de Negócio PubHub)
+// -----------------------------------------
+
+model Post {
+  id          String            @id @default(cuid())
+  content     String            @db.Text
+  imageUrl    String?           // Se você usar Firebase Storage depois
+  createdAt   DateTime          @default(now())
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Um post pode ser enviado para vários lugares (LinkedIn, Reddit, etc)
+  destinations PostDestination[] 
+}
+
+model PostDestination {
+  id             String     @id @default(cuid())
+  postId         String
+  platform       String     // "LINKEDIN", "REDDIT"
+  status         PostStatus @default(PENDING)
+  externalPostId String?    // ID retornado pela API da rede social (link do post)
+  errorMessage   String?    @db.Text
+  sentAt         DateTime?
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+enum PostStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
