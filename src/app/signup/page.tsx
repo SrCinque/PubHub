@@ -49,7 +49,6 @@ export default function SignUp() {
         body: JSON.stringify({
           name: formData.name.trim(),
           email: formData.email.trim(),
-          image: formData.image.trim() || undefined,
         }),
       });
 
@@ -95,7 +94,7 @@ export default function SignUp() {
       <section className="section py-24 flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="container max-w-md w-full">
           {/* Form Container */}
-          <div className="bg-white/5 border border-[var(--border-green)] rounded-2xl p-8 backdrop-blur-sm space-y-8">
+          <div className="bg-white/5 border border-[var(--border-green)] rounded-2xl p-10 backdrop-blur-sm space-y-8">
             {/* Header */}
             <div className="text-center space-y-3">
               <h1 className="text-5xl font-bold leading-tight">
@@ -134,9 +133,9 @@ export default function SignUp() {
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Name Input */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <label
                     htmlFor="name"
                     className="block text-sm font-semibold text-white"
@@ -156,7 +155,7 @@ export default function SignUp() {
                 </div>
 
                 {/* Email Input */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <label
                     htmlFor="email"
                     className="block text-sm font-semibold text-white"
@@ -176,7 +175,7 @@ export default function SignUp() {
                 </div>
 
                 {/* Image URL Input */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <label
                     htmlFor="image"
                     className="block text-sm font-semibold text-white"
