@@ -64,7 +64,7 @@ export default function SignUp() {
 
       // Redireciona após 2 segundos
       setTimeout(() => {
-        router.push(`/user/${userData.id}`);
+        router.push(`/`);
       }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
