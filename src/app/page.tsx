@@ -30,7 +30,9 @@ export default function Home() {
 
           <div className="navbar-actions">
             <button className="navbar-action-btn">Entrar</button>
-            <button className="navbar-cta-btn">Comece agora</button>
+            <Link href="/signup" className="navbar-cta-btn">
+              Comece agora
+            </Link>
           </div>
 
           <button
@@ -64,9 +66,12 @@ export default function Home() {
             <Link href="#" className="block navbar-link">
               FAQ
             </Link>
-            <button className="w-full px-4 py-2 btn btn-primary">
+            <Link
+              href="/signup"
+              className="w-full block px-4 py-2 btn btn-primary text-center"
+            >
               Comece agora
-            </button>
+            </Link>
           </div>
         )}
       </nav>
@@ -136,12 +141,13 @@ export default function Home() {
               </div>
             </div>
 
-            <button
+            <Link
+              href="/signup"
               className="btn btn-primary"
               style={{ width: "fit-content" }}
             >
               Comece agora
-            </button>
+            </Link>
           </div>
 
           <div className="hero-video">
