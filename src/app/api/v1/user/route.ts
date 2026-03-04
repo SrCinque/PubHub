@@ -39,7 +39,7 @@ async function GET(request: NextRequest) {
 async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, image } = body;
+    const { name, email, image, password } = body;
 
     if (!name || !email) {
       return NextResponse.json(
@@ -52,6 +52,7 @@ async function POST(request: NextRequest) {
       name,
       email,
       image,
+      password,
     });
 
     return NextResponse.json(newUser, { status: 201 });

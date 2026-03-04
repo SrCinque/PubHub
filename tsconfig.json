@@ -6,10 +6,12 @@
     "paths": {
       "@/*": ["src/*"],
       "@services/*": ["src/services/*"],
+      "@ifra/*": ["src/infra/*"],
       "@lib/*": ["src/lib/*"],
       "@actions/*": ["src/app/actions/*"]
     },
     "allowJs": true,
+    "allowImportingTsExtensions": true,
     "skipLibCheck": true,
     "strict": false,
     "noEmit": true,

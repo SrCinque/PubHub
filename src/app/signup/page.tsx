@@ -13,6 +13,8 @@ export default function SignUp() {
     name: "",
     email: "",
     image: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +42,15 @@ export default function SignUp() {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
         throw new Error("Email inválido");
       }
+      if (!formData.password.trim()) {
+        throw new Error("Senha é obrigatória");
+      }
+      if (formData.password.length < 6) {
+        throw new Error("Senha deve ter no mínimo 6 caracteres");
+      }
+      if (formData.password !== formData.confirmPassword) {
+        throw new Error("As senhas não correspondem");
+      }
 
       const response = await fetch("/api/v1/user", {
         method: "POST",
@@ -49,6 +60,7 @@ export default function SignUp() {
         body: JSON.stringify({
           name: formData.name.trim(),
           email: formData.email.trim(),
+          password: formData.password,
         }),
       });
 
@@ -59,7 +71,13 @@ export default function SignUp() {
 
       const userData = await response.json();
       setSuccess(true);
-      setFormData({ name: "", email: "", image: "" });
+      setFormData({
+        name: "",
+        email: "",
+        image: "",
+        password: "",
+        confirmPassword: "",
+      });
 
       // Redireciona após 2 segundos
       setTimeout(() => {
@@ -92,27 +110,27 @@ export default function SignUp() {
 
       {/* Signup Form Section */}
       <section className="section py-24 flex items-center justify-center min-h-[calc(100vh-4rem)]">
-        <div className="container max-w-md w-full">
+        <div className="signup-form-container">
           {/* Form Container */}
-          <div className="bg-white/5 border border-[var(--border-green)] rounded-2xl p-10 backdrop-blur-sm space-y-8">
+          <div className="signup-form-wrapper">
             {/* Header */}
-            <div className="text-center space-y-3">
-              <h1 className="text-5xl font-bold leading-tight">
+            <div className="signup-form-header">
+              <h1 className="signup-form-title">
                 Bem-vindo ao{" "}
                 <span className="text-[var(--primary-green-light)]">
                   PubHub
                 </span>
               </h1>
-              <p className="text-[var(--text-muted)] text-lg">
+              <p className="signup-form-subtitle">
                 Crie sua conta e comece a publicar em massa
               </p>
             </div>
 
             {success ? (
-              <div className="bg-green-500/15 border border-green-500/40 rounded-xl p-8 text-center space-y-4 animate-in fade-in zoom-in duration-300">
-                <div className="flex justify-center">
+              <div className="signup-success-message">
+                <div>
                   <svg
-                    className="w-16 h-16 text-[var(--primary-green-light)]"
+                    className="signup-success-icon"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -124,21 +142,21 @@ export default function SignUp() {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold mb-2">
+                  <h2 className="signup-success-title">
                     Conta criada com sucesso!
                   </h2>
-                  <p className="text-[var(--text-muted)]">
+                  <p className="signup-success-subtitle">
                     Redirecionando para sua conta...
                   </p>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-8">
+              <form onSubmit={handleSubmit} className="signup-form">
                 {/* Name Input */}
-                <div className="space-y-3">
+                <div className="signup-form-group">
                   <label
                     htmlFor="name"
-                    className="block text-sm font-semibold text-white"
+                    className="signup-form-label"
                   >
                     Nome Completo
                   </label>
@@ -149,16 +167,16 @@ export default function SignUp() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="João Silva"
-                    className="w-full px-5 py-3.5 bg-white/8 border border-[var(--border-green)] rounded-lg focus:outline-none focus:border-[var(--primary-green-light)] focus:bg-white/15 transition duration-200 text-white placeholder-gray-600 text-base"
+                    className="signup-form-input"
                     disabled={loading}
                   />
                 </div>
 
                 {/* Email Input */}
-                <div className="space-y-3">
+                <div className="signup-form-group">
                   <label
                     htmlFor="email"
-                    className="block text-sm font-semibold text-white"
+                    className="signup-form-label"
                   >
                     Email
                   </label>
@@ -169,16 +187,56 @@ export default function SignUp() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="joao@example.com"
-                    className="w-full px-5 py-3.5 bg-white/8 border border-[var(--border-green)] rounded-lg focus:outline-none focus:border-[var(--primary-green-light)] focus:bg-white/15 transition duration-200 text-white placeholder-gray-600 text-base"
+                    className="signup-form-input"
+                    disabled={loading}
+                  />
+                </div>
+
+                {/* Password Input */}
+                <div className="signup-form-group">
+                  <label
+                    htmlFor="password"
+                    className="signup-form-label"
+                  >
+                    Senha
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Mínimo 6 caracteres"
+                    className="signup-form-input"
+                    disabled={loading}
+                  />
+                </div>
+
+                {/* Confirm Password Input */}
+                <div className="signup-form-group">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="signup-form-label"
+                  >
+                    Confirmar Senha
+                  </label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirme sua senha"
+                    className="signup-form-input"
                     disabled={loading}
                   />
                 </div>
 
                 {/* Image URL Input */}
-                <div className="space-y-3">
+                <div className="signup-form-group">
                   <label
                     htmlFor="image"
-                    className="block text-sm font-semibold text-white"
+                    className="signup-form-label"
                   >
                     URL da Foto de Perfil{" "}
                     <span className="text-[var(--text-muted)] font-normal">
@@ -192,28 +250,26 @@ export default function SignUp() {
                     value={formData.image}
                     onChange={handleChange}
                     placeholder="https://example.com/avatar.jpg"
-                    className="w-full px-5 py-3.5 bg-white/8 border border-[var(--border-green)] rounded-lg focus:outline-none focus:border-[var(--primary-green-light)] focus:bg-white/15 transition duration-200 text-white placeholder-gray-600 text-base"
+                    className="signup-form-input"
                     disabled={loading}
                   />
                 </div>
 
                 {/* Error Message */}
                 {error && (
-                  <div className="bg-red-500/15 border border-red-500/40 rounded-lg p-4 text-red-300 text-sm animate-in fade-in slide-in-from-top duration-200">
-                    <div className="flex items-start gap-3">
-                      <svg
-                        className="w-5 h-5 flex-shrink-0 mt-0.5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span>{error}</span>
-                    </div>
+                  <div className="signup-error-message">
+                    <svg
+                      className="signup-error-icon"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>{error}</span>
                   </div>
                 )}
 
@@ -221,7 +277,7 @@ export default function SignUp() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn btn-primary w-full justify-center py-4 text-lg font-semibold mt-8 transition-all duration-200 hover:shadow-lg hover:shadow-[var(--primary-green)]/25"
+                  className="btn btn-primary w-full justify-center py-4 text-lg font-semibold signup-submit-btn transition-all duration-200 hover:shadow-lg hover:shadow-[var(--primary-green)]/25"
                 >
                   {loading ? (
                     <>
@@ -234,11 +290,11 @@ export default function SignUp() {
                 </button>
 
                 {/* Terms Text */}
-                <p className="text-center text-xs text-[var(--text-muted)] leading-relaxed">
+                <p className="signup-terms-text">
                   Ao criar uma conta, você concorda com nossos{" "}
                   <Link
                     href="#"
-                    className="text-[var(--primary-green-light)] hover:underline transition"
+                    className="signup-terms-link"
                   >
                     Termos de Serviço
                   </Link>
@@ -247,11 +303,11 @@ export default function SignUp() {
             )}
 
             {/* Login Link */}
-            <div className="pt-4 border-t border-[var(--border-green)] text-center text-sm text-[var(--text-muted)]">
+            <div className="signup-login-section">
               Já tem uma conta?{" "}
               <Link
                 href="/login"
-                className="text-[var(--primary-green-light)] hover:underline font-semibold transition"
+                className="signup-login-link"
               >
                 Faça login
               </Link>
