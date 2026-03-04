@@ -4,7 +4,7 @@ async function create(data: {
   name: string;
   email: string;
   image?: string;
-  password?: string;
+  password: string;
 }) {
   if (data.password) {
     data.password = await password.hashPassword(data.password);
