@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function Login() {
   const router = useRouter();
@@ -40,24 +41,17 @@ export default function Login() {
         throw new Error("Senha é obrigatória");
       }
 
-      // Aqui você faria a chamada para autenticar o usuário
-      // const response = await fetch("/api/v1/auth/login", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     email: formData.email.trim(),
-      //     password: formData.password,
-      //   }),
-      // });
+      // Fazer login usando NextAuth
+      const result = await signIn("credentials", {
+        email: formData.email.trim(),
+        password: formData.password,
+        redirect: false,
+      });
 
-      // if (!response.ok) {
-      //   const errorData = await response.json();
-      //   throw new Error(errorData.error || "Erro ao fazer login");
-      // }
+      if (!result?.ok) {
+        throw new Error(result?.error || "Erro ao fazer login");
+      }
 
-      // const userData = await response.json();
       setSuccess(true);
       setFormData({
         email: "",
@@ -66,7 +60,7 @@ export default function Login() {
 
       // Redireciona após 2 segundos
       setTimeout(() => {
-        router.push(`/`);
+        router.push("/");
       }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");

@@ -1,4 +1,4 @@
-import db from "@ifra/db.ts";
+import db from "@/infra/db";
 import password from "@/models/password";
 async function create(data: {
   name: string;

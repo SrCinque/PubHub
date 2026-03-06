@@ -69,7 +69,8 @@ export default function SignUp() {
         throw new Error(errorData.error || "Erro ao criar usuário");
       }
 
-      const userData = await response.json();
+      // Dados do usuário criado
+      await response.json();
       setSuccess(true);
       setFormData({
         name: "",
@@ -154,10 +155,7 @@ export default function SignUp() {
               <form onSubmit={handleSubmit} className="signup-form">
                 {/* Name Input */}
                 <div className="signup-form-group">
-                  <label
-                    htmlFor="name"
-                    className="signup-form-label"
-                  >
+                  <label htmlFor="name" className="signup-form-label">
                     Nome Completo
                   </label>
                   <input
@@ -174,10 +172,7 @@ export default function SignUp() {
 
                 {/* Email Input */}
                 <div className="signup-form-group">
-                  <label
-                    htmlFor="email"
-                    className="signup-form-label"
-                  >
+                  <label htmlFor="email" className="signup-form-label">
                     Email
                   </label>
                   <input
@@ -194,10 +189,7 @@ export default function SignUp() {
 
                 {/* Password Input */}
                 <div className="signup-form-group">
-                  <label
-                    htmlFor="password"
-                    className="signup-form-label"
-                  >
+                  <label htmlFor="password" className="signup-form-label">
                     Senha
                   </label>
                   <input
@@ -234,10 +226,7 @@ export default function SignUp() {
 
                 {/* Image URL Input */}
                 <div className="signup-form-group">
-                  <label
-                    htmlFor="image"
-                    className="signup-form-label"
-                  >
+                  <label htmlFor="image" className="signup-form-label">
                     URL da Foto de Perfil{" "}
                     <span className="text-[var(--text-muted)] font-normal">
                       (Opcional)
@@ -292,10 +281,7 @@ export default function SignUp() {
                 {/* Terms Text */}
                 <p className="signup-terms-text">
                   Ao criar uma conta, você concorda com nossos{" "}
-                  <Link
-                    href="#"
-                    className="signup-terms-link"
-                  >
+                  <Link href="#" className="signup-terms-link">
                     Termos de Serviço
                   </Link>
                 </p>
@@ -305,10 +291,7 @@ export default function SignUp() {
             {/* Login Link */}
             <div className="signup-login-section">
               Já tem uma conta?{" "}
-              <Link
-                href="/login"
-                className="signup-login-link"
-              >
+              <Link href="/login" className="signup-login-link">
                 Faça login
               </Link>
             </div>

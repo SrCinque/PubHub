@@ -1,15 +1,25 @@
-### 🛠️ Implementação da Página de Login
+# 🔐 Configuração de Autenticação com NextAuth.js
 
-**Objetivo:** Criar a interface de autenticação seguindo o padrão visual existente.
+Implementar o gerenciamento de sessões e proteção de rotas utilizando a biblioteca **NextAuth.js**.
 
-- [ ] **Configuração de Rota:**
-  - Criar o diretório `/login` (baseado na estrutura atual de `/user`).
-  - Configurar o arquivo de rota (ex: `page.tsx` ou `route.js`) para responder ao novo endpoint.
+## 📋 Requisitos de Configuração
 
-- [ ] **Estilização (Refatoração):**
-  - Identificar os estilos comuns na página `signup`.
-  - Migrar esses estilos para o arquivo `global.css` utilizando variáveis ou classes utilitárias para garantir a consistência visual (DRY - Don't Repeat Yourself).
+### 1. Configuração do `auth.js` (Providers)
 
-- [ ] **Desenvolvimento da UI:**
-  - Construir o formulário de login utilizando os componentes estilizados globalmente.
-  - Garantir que os campos de entrada e botões sigam o padrão da página de cadastro.
+- **Credentials Provider**: Configurar estratégia de **Email e Senha**.
+- **User Service Integration**: Consumir o serviço de usuário existente para consultas ao banco de dados.
+- **Password Verification**: Implementar a lógica de comparação de hash do `bcrypt` para validar a senha informada.
+
+### 2. Gestão de Tokens e Sessão
+
+- **JWT (JSON Web Token)**: Configurar o NextAuth para retornar o token após a autenticação bem-sucedida.
+- **Session Callback**: Garantir que dados essenciais do usuário (ID, email) estejam disponíveis na sessão.
+
+### 3. Rota de API (Handler)
+
+- **Route Handler**: Criar a rota dinâmica do NextAuth (ex: `/api/auth/[...nextauth]`) para gerenciar os fluxos de `signIn`, `signOut` e `callback`.
+
+### 4. Proteção de Rotas
+
+- Configurar o `middleware` do Next.js para proteger as rotas privadas.
+- Redirecionar usuários não autenticados para a nova página de `/login`.
