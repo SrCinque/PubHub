@@ -1,0 +1,15 @@
+### 🛠️ Implementação da Página de Login
+
+**Objetivo:** Criar a interface de autenticação seguindo o padrão visual existente.
+
+- [ ] **Configuração de Rota:**
+  - Criar o diretório `/login` (baseado na estrutura atual de `/user`).
+  - Configurar o arquivo de rota (ex: `page.tsx` ou `route.js`) para responder ao novo endpoint.
+
+- [ ] **Estilização (Refatoração):**
+  - Identificar os estilos comuns na página `signup`.
+  - Migrar esses estilos para o arquivo `global.css` utilizando variáveis ou classes utilitárias para garantir a consistência visual (DRY - Don't Repeat Yourself).
+
+- [ ] **Desenvolvimento da UI:**
+  - Construir o formulário de login utilizando os componentes estilizados globalmente.
+  - Garantir que os campos de entrada e botões sigam o padrão da página de cadastro.
