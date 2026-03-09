@@ -1,81 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 
 export default function Home() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   return (
     <div className="min-h-screen bg-grid">
-      {/* Navigation */}
-      <nav className="navbar">
-        <div className="navbar-container">
-          <div className="navbar-logo">
-            <div className="navbar-logo-icon">P</div>
-            <span className="navbar-logo-text">PubHub</span>
-          </div>
-
-          <div className="navbar-menu">
-            <Link href="#" className="navbar-link">
-              Início
-            </Link>
-            <Link href="#" className="navbar-link">
-              Preços
-            </Link>
-            <Link href="#" className="navbar-link">
-              FAQ
-            </Link>
-          </div>
-
-          <div className="navbar-actions">
-            <button className="navbar-action-btn">Entrar</button>
-            <Link href="/signup" className="navbar-cta-btn">
-              Comece agora
-            </Link>
-          </div>
-
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
-        </div>
-
-        {isMenuOpen && (
-          <div className="hidden md:block px-4 pb-4 space-y-3">
-            <Link href="#" className="block navbar-link">
-              Início
-            </Link>
-            <Link href="#" className="block navbar-link">
-              Preços
-            </Link>
-            <Link href="#" className="block navbar-link">
-              FAQ
-            </Link>
-            <Link
-              href="/signup"
-              className="w-full block px-4 py-2 btn btn-primary text-center"
-            >
-              Comece agora
-            </Link>
-          </div>
-        )}
-      </nav>
-
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-grid">
@@ -214,26 +143,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="footer">
-        <div className="footer-container">
-          <p className="footer-content">
-            Desenvolvido com ❤️ por Filipe Cinque
-          </p>
-          <div className="footer-links">
-            <Link href="#" className="footer-link">
-              Política de Privacidade
-            </Link>
-            <Link href="#" className="footer-link">
-              Termos de Serviço
-            </Link>
-            <Link href="#" className="footer-link">
-              Contato
-            </Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 
 export default function Login() {
   const router = useRouter();
@@ -41,15 +40,21 @@ export default function Login() {
         throw new Error("Senha é obrigatória");
       }
 
-      // Fazer login usando NextAuth
-      const result = await signIn("credentials", {
-        email: formData.email.trim(),
-        password: formData.password,
-        redirect: false,
+      // Fazer login via API
+      const response = await fetch("/api/v1/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email.trim(),
+          password: formData.password,
+        }),
       });
 
-      if (!result?.ok) {
-        throw new Error(result?.error || "Erro ao fazer login");
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Erro ao fazer login");
       }
 
       setSuccess(true);
@@ -71,22 +76,6 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-grid">
-      {/* Navigation */}
-      <nav className="navbar">
-        <div className="navbar-container">
-          <Link href="/" className="flex items-center gap-2 cursor-pointer">
-            <div className="navbar-logo-icon">P</div>
-            <span className="navbar-logo-text">PubHub</span>
-          </Link>
-
-          <div className="navbar-actions">
-            <Link href="/" className="navbar-action-btn">
-              Voltar
-            </Link>
-          </div>
-        </div>
-      </nav>
-
       {/* Login Form Section */}
       <section className="section py-24 flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="login-form-container">
@@ -219,23 +208,6 @@ export default function Login() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="footer">
-        <div className="footer-container">
-          <p className="footer-content">
-            Desenvolvido com ❤️ por Filipe Cinque
-          </p>
-          <div className="footer-links">
-            <Link href="#" className="footer-link">
-              Política de Privacidade
-            </Link>
-            <Link href="#" className="footer-link">
-              Termos de Serviço
-            </Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

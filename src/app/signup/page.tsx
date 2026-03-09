@@ -93,22 +93,6 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen bg-grid">
-      {/* Navigation */}
-      <nav className="navbar">
-        <div className="navbar-container">
-          <Link href="/" className="flex items-center gap-2 cursor-pointer">
-            <div className="navbar-logo-icon">P</div>
-            <span className="navbar-logo-text">PubHub</span>
-          </Link>
-
-          <div className="navbar-actions">
-            <Link href="/" className="navbar-action-btn">
-              Voltar
-            </Link>
-          </div>
-        </div>
-      </nav>
-
       {/* Signup Form Section */}
       <section className="section py-24 flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="signup-form-container">
@@ -298,23 +282,6 @@ export default function SignUp() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="footer">
-        <div className="footer-container">
-          <p className="footer-content">
-            Desenvolvido com ❤️ por Filipe Cinque
-          </p>
-          <div className="footer-links">
-            <Link href="#" className="footer-link">
-              Política de Privacidade
-            </Link>
-            <Link href="#" className="footer-link">
-              Termos de Serviço
-            </Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
