@@ -63,9 +63,11 @@ export default function Login() {
         password: "",
       });
 
-      // Redireciona após 2 segundos
+      // Redireciona após 2 segundos COM REFRESH
+      // router.refresh() atualiza o Header e outros Server Components
       setTimeout(() => {
-        router.push("/");
+        router.refresh(); // Revalida Server Components
+        router.push("/"); // Redireciona para home
       }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");

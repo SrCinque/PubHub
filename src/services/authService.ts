@@ -1,5 +1,6 @@
 import db from "@/infra/db";
 import passwordModule from "@/models/password";
+import jwt from "jsonwebtoken";
 
 interface AuthenticatedUser {
   id: string;
@@ -9,6 +10,13 @@ interface AuthenticatedUser {
   emailVerified: Date | null;
   createdAt: Date;
   updatedAt: Date;
+}
+
+interface JWTPayload {
+  userId: string;
+  userEmail: string;
+  iat?: number;
+  exp?: number;
 }
 
 /**
@@ -60,17 +68,33 @@ async function getAuthenticatedUser(
 /**
  * Cria uma nova sessão para o usuário
  * @param userId - ID do usuário
+ * @param userEmail - Email do usuário
  * @returns Dados da sessão criada
  */
-async function createSession(userId: string) {
-  const sessionToken = `${userId}-${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+async function createSession(userId: string, userEmail: string) {
+  // Gerar um JWT com os dados do usuário
+  const secretKey =
+    process.env.JWT_SECRET || "your-secret-key-change-in-production";
+  const expiresIn = "30d"; // 30 dias
+
+  const sessionToken = jwt.sign(
+    {
+      userId,
+      userEmail,
+    } as JWTPayload,
+    secretKey,
+    { expiresIn },
+  );
+
+  // Calcular a data de expiração (30 dias a partir de agora)
+  const expiresDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
   const session = await db.session.create({
     data: {
       userId,
       sessionToken,
       createdAt: new Date().toISOString(),
-      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 dias
+      expires: expiresDate,
       updatedAt: new Date(),
     },
   });

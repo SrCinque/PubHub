@@ -1,34 +1,77 @@
 import { NextRequest, NextResponse } from "next/server";
+import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 import user from "@services/user";
 
+// Tipo customizado para headers com dados de autenticação
+interface AuthHeaders {
+  "x-user-id": string | null;
+  "x-user-email": string | null;
+}
+
+/**
+ * GET /api/v1/user
+ * Recupera dados do usuário autenticado
+ * Dados injetados pelo middleware nos headers customizados
+ */
 async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const id = searchParams.get("id");
-    const email = searchParams.get("email");
+    // Recuperar headers da requisição
+    const headersList = await headers();
 
-    if (!id && !email) {
+    // Extrair dados injetados pelo middleware
+    const userIdFromMiddleware = headersList.get("x-user-id");
+    const userEmailFromMiddleware = headersList.get("x-user-email");
+
+    // DEBUG: Log para verificar se os headers estão chegando
+    console.log("[GET /api/v1/user] Headers recebidos:", {
+      "x-user-id": userIdFromMiddleware,
+      "x-user-email": userEmailFromMiddleware,
+    });
+
+    // Validar se pelo menos o ID está presente
+    if (!userIdFromMiddleware) {
+      console.error(
+        "[GET /api/v1/user] Erro: x-user-id não encontrado nos headers",
+      );
       return NextResponse.json(
-        { error: "Passe outro id ou e-mail como parâmetro" },
-        { status: 400 },
+        {
+          error: "Dados do usuário não encontrados",
+          debug: "header x-user-id missing",
+        },
+        { status: 401 },
       );
     }
 
-    let userData;
-
-    if (id) {
-      userData = await user.getById(id);
-    } else if (email) {
-      userData = await user.getByEmail(email);
-    }
+    // Buscar dados do usuário pelo ID
+    const userData = await user.getById(userIdFromMiddleware);
 
     if (!userData) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      console.warn(
+        `[GET /api/v1/user] Usuário não encontrado para ID: ${userIdFromMiddleware}`,
+      );
+
+      // Fallback: tentar buscar por email se o ID falhar
+      if (userEmailFromMiddleware) {
+        const userByEmail = await user.getByEmail(userEmailFromMiddleware);
+        if (userByEmail) {
+          console.log(
+            `[GET /api/v1/user] Usuário encontrado por email: ${userEmailFromMiddleware}`,
+          );
+          return NextResponse.json(userByEmail, { status: 200 });
+        }
+      }
+
+      return NextResponse.json(
+        { error: "Usuário não encontrado" },
+        { status: 404 },
+      );
     }
 
+    console.log(`[GET /api/v1/user] Usuário recuperado: ${userData.email}`);
     return NextResponse.json(userData, { status: 200 });
   } catch (error) {
-    console.error("GET /api/v1/user error:", error);
+    console.error("[GET /api/v1/user] Erro:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -36,12 +79,20 @@ async function GET(request: NextRequest) {
   }
 }
 
+/**
+ * POST /api/v1/user
+ * Cria um novo usuário (não requer autenticação via middleware)
+ * Body: { name, email, image?, password }
+ */
 async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { name, email, image, password } = body;
 
+    console.log(`[POST /api/v1/user] Criando novo usuário: ${email}`);
+
     if (!name || !email) {
+      console.warn("[POST /api/v1/user] Erro: name ou email faltando");
       return NextResponse.json(
         { error: "Nome e e-mail é necessário" },
         { status: 400 },
@@ -55,9 +106,16 @@ async function POST(request: NextRequest) {
       password,
     });
 
+    console.log(
+      `[POST /api/v1/user] Usuário criado com sucesso: ${newUser.id}`,
+    );
+
+    // Revalidar o cache para atualizar o Header
+    revalidatePath("/", "layout");
+
     return NextResponse.json(newUser, { status: 201 });
   } catch (error) {
-    console.error("POST /api/v1/user error:", error);
+    console.error("[POST /api/v1/user] Erro:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -65,19 +123,29 @@ async function POST(request: NextRequest) {
   }
 }
 
+/**
+ * PATCH /api/v1/user
+ * Atualiza dados do usuário autenticado
+ * Requer headers injetados pelo middleware (x-user-id)
+ * Body: { id, name?, image? }
+ */
 async function PATCH(request: NextRequest) {
   try {
     const body = await request.json();
     const { id, name, image } = body;
 
+    console.log(`[PATCH /api/v1/user] Atualizando usuário: ${id}`);
+
     if (!id) {
+      console.warn("[PATCH /api/v1/user] Erro: ID do usuário não fornecido");
       return NextResponse.json(
-        { error: "ID do  usuário é necessário" },
+        { error: "ID do usuário é necessário" },
         { status: 400 },
       );
     }
 
     if (!name && !image) {
+      console.warn("[PATCH /api/v1/user] Erro: nenhum campo para atualizar");
       return NextResponse.json(
         { error: "Forneça pelo menos o 'nome' ou a 'imagem' para atualizar." },
         { status: 400 },
@@ -89,9 +157,11 @@ async function PATCH(request: NextRequest) {
       ...(image && { image }),
     });
 
+    console.log(`[PATCH /api/v1/user] Usuário atualizado: ${updatedUser.id}`);
+
     return NextResponse.json(updatedUser, { status: 200 });
   } catch (error) {
-    console.error("PATCH /api/v1/user error:", error);
+    console.error("[PATCH /api/v1/user] Erro:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
