@@ -9,6 +9,7 @@ interface ClientProfileFormProps {
     id: string;
     name: string | null;
     email: string;
+    image: string | null;
     createdAt: string;
     emailVerified: boolean | null;
   };
@@ -17,12 +18,58 @@ interface ClientProfileFormProps {
 export function ClientProfileForm({ userData }: ClientProfileFormProps) {
   const router = useRouter();
   const [name, setName] = useState(userData.name || "");
+  const [avatar, setAvatar] = useState(userData.image || "");
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+
+  const getInitials = (name: string | null, email: string) => {
+    if (name && name.trim().length > 0) return name.trim().charAt(0).toUpperCase();
+    return email.charAt(0).toUpperCase();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validar tamanho (2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      setMessage({ type: "error", text: "Arquivo muito grande (máx 2MB)" });
+      return;
+    }
+
+    setIsUploading(true);
+    setMessage(null);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("/api/v1/user/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setAvatar(data.imageUrl);
+        setMessage({ type: "success", text: "Foto de perfil atualizada!" });
+        router.refresh();
+      } else {
+        setMessage({ type: "error", text: data.error || "Erro no upload" });
+      }
+    } catch (error) {
+      console.error("Erro no upload:", error);
+      setMessage({ type: "error", text: "Erro ao enviar imagem" });
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const dataCriacao = userData?.createdAt
     ? new Date(userData.createdAt).toLocaleDateString("pt-BR", {
@@ -97,6 +144,47 @@ export function ClientProfileForm({ userData }: ClientProfileFormProps) {
           <span className="font-medium">{message.text}</span>
         </div>
       )}
+
+      <div className="flex flex-col md:flex-row items-center gap-8 pb-8 border-b border-white/5">
+        <div className="relative group">
+          <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-[var(--border-green)] bg-white/5 flex items-center justify-center text-4xl font-bold text-[var(--primary-green)] shadow-2xl">
+            {avatar ? (
+              <img
+                src={avatar}
+                alt="Avatar"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              getInitials(userData.name, userData.email)
+            )}
+            
+            {isUploading && (
+              <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                <div className="w-8 h-8 border-2 border-[var(--primary-green)] border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            )}
+          </div>
+          
+          <label className="absolute bottom-0 right-0 p-2 bg-[var(--primary-green)] text-[var(--text-dark)] rounded-full cursor-pointer hover:scale-110 transition-all shadow-lg group-hover:rotate-12">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <input
+              type="file"
+              className="hidden"
+              accept="image/*"
+              onChange={handleFileChange}
+              disabled={isUploading}
+            />
+          </label>
+        </div>
+
+        <div className="text-center md:text-left space-y-1">
+          <h3 className="text-xl font-bold text-white">{userData.name || "Usuário PubHub"}</h3>
+          <p className="text-[var(--text-muted)] text-sm">{userData.email}</p>
+          <p className="text-xs text-[var(--primary-green)] font-medium pt-2">
+            {isUploading ? "Enviando..." : "Clique no ícone para alterar sua foto"}
+          </p>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-2">
