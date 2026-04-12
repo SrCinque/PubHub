@@ -53,12 +53,13 @@ export default async function Header() {
           <span className="navbar-logo-text">PubHub</span>
         </Link>
 
-        <div className="navbar-actions">
-          <Link href="/perfil" className="navbar-action-btn">
+        <div className="navbar-actions items-center gap-4">
+          <Link href="/perfil" className="navbar-action-btn whitespace-nowrap">
             {userName || "Perfil"}
           </Link>
           <LogoutButton />
         </div>
+
       </div>
     </nav>
   );

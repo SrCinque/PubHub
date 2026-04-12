@@ -63,12 +63,14 @@ export default function Login() {
         password: "",
       });
 
-      // Redireciona após 2 segundos COM REFRESH
-      // router.refresh() atualiza o Header e outros Server Components
+      // router.refresh() imediatamente para revalidar Server Components (como o Header)
+      router.refresh();
+
+      // Redireciona após 1.5 segundos para o usuário ver a mensagem de sucesso
       setTimeout(() => {
-        router.refresh(); // Revalida Server Components
-        router.push("/"); // Redireciona para home
-      }, 2000);
+        router.push("/");
+      }, 1500);
+
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
