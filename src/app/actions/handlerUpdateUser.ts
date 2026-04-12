@@ -35,7 +35,14 @@ export async function handlerUpdateUser(
     });
 
     if (!response.ok) {
-      const error = await response.json();
+      let error = { error: "Erro ao atualizar perfil" };
+      try {
+        error = await response.json();
+      } catch (parseError) {
+        console.error("Erro ao fazer parse da resposta de erro:", parseError);
+        const text = await response.text();
+        console.error("Resposta recebida:", text);
+      }
       return {
         success: false,
         message: error.error || "Erro ao atualizar perfil",

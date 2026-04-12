@@ -86,7 +86,34 @@ async function GET(request: NextRequest) {
  */
 async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    // Debug: Log do request
+    const contentType = request.headers.get("content-type");
+    console.log("[POST /api/v1/user] Content-Type recebido:", contentType);
+
+    let body;
+    try {
+      const rawBody = await request.text();
+      console.log("[POST /api/v1/user] Raw body recebido:", rawBody);
+      console.log("[POST /api/v1/user] Raw body length:", rawBody.length);
+
+      // Se estiver vazio, retornar erro
+      if (!rawBody || rawBody.trim() === "") {
+        throw new Error("Corpo da requisição vazio");
+      }
+
+      body = JSON.parse(rawBody);
+      console.log("[POST /api/v1/user] JSON parseado com sucesso");
+    } catch (parseError) {
+      console.error(
+        "[POST /api/v1/user] Erro ao fazer parse do JSON:",
+        parseError,
+      );
+      return NextResponse.json(
+        { error: "JSON inválido no corpo da requisição" },
+        { status: 400 },
+      );
+    }
+
     const { name, email, image, password } = body;
 
     console.log(`[POST /api/v1/user] Criando novo usuário: ${email}`);
@@ -115,7 +142,9 @@ async function POST(request: NextRequest) {
 
     return NextResponse.json(newUser, { status: 201 });
   } catch (error) {
-    console.error("[POST /api/v1/user] Erro:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Erro desconhecido";
+    console.error("[POST /api/v1/user] Erro:", errorMessage);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -131,7 +160,20 @@ async function POST(request: NextRequest) {
  */
 async function PATCH(request: NextRequest) {
   try {
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (parseError) {
+      console.error(
+        "[PATCH /api/v1/user] Erro ao fazer parse do JSON:",
+        parseError,
+      );
+      return NextResponse.json(
+        { error: "JSON inválido no corpo da requisição" },
+        { status: 400 },
+      );
+    }
+
     const { id, name, image } = body;
 
     console.log(`[PATCH /api/v1/user] Atualizando usuário: ${id}`);
@@ -161,7 +203,9 @@ async function PATCH(request: NextRequest) {
 
     return NextResponse.json(updatedUser, { status: 200 });
   } catch (error) {
-    console.error("[PATCH /api/v1/user] Erro:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Erro desconhecido";
+    console.error("[PATCH /api/v1/user] Erro:", errorMessage);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

@@ -20,13 +20,34 @@ interface JWTPayload {
  * - x-user-email: string (Email do usuário decodificado do JWT)
  */
 export async function proxy(request: NextRequest) {
-  // 1. Definir rotas que requerem autenticação
-  const protectedRoutes = ["/api/v1/user", "/api/v1/logout"];
-
+  // 1. Definir rotas que requerem autenticação e seus métodos
   const pathname = request.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route),
-  );
+  const method = request.method;
+
+  // POST em /api/v1/user é pública (criar nova conta)
+  // GET, PATCH, DELETE em /api/v1/user exigem autenticação
+  const isUserCreateRoute = pathname === "/api/v1/user" && method === "POST";
+
+  // Todas as rotas /api/v1/user/upload exigem autenticação
+  const isUserUploadRoute = pathname.startsWith("/api/v1/user/upload");
+
+  // Todas as rotas /api/v1/logout exigem autenticação
+  const isLogoutRoute = pathname.startsWith("/api/v1/logout");
+
+  // Outras operações em /api/v1/user (GET, PATCH, DELETE) exigem autenticação
+  const isUserAuthRoute =
+    pathname === "/api/v1/user" &&
+    (method === "GET" || method === "PATCH" || method === "DELETE");
+
+  // Se é POST para criar conta, permitir sem autenticação
+  if (isUserCreateRoute) {
+    console.log(`[Middleware] Rota pública: ${pathname} ${method}`);
+    return NextResponse.next();
+  }
+
+  // Verificar se é uma rota que requer autenticação
+  const isProtectedRoute =
+    isUserAuthRoute || isUserUploadRoute || isLogoutRoute;
 
   // Se não for rota protegida, continuar normalmente
   if (!isProtectedRoute) {
@@ -36,7 +57,7 @@ export async function proxy(request: NextRequest) {
   // 2. Recuperar o session_token do cookie HTTP Only
   const sessionToken = request.cookies.get("session_token")?.value;
 
-  console.log(`[Middleware] Rota protegida: ${pathname}`);
+  console.log(`[Middleware] Rota protegida: ${pathname} ${method}`);
   console.log(`[Middleware] Session token presente: ${!!sessionToken}`);
 
   // Se não houver token, retornar 401 antes de chegar à rota
