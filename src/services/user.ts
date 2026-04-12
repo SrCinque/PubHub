@@ -15,7 +15,10 @@ async function create(data: {
 async function update(id: string, data: { name?: string; image?: string }) {
   return await db.user.update({
     where: { id },
-    data,
+    data: {
+      ...data,
+      updatedAt: new Date(),
+    },
   });
 }
 
