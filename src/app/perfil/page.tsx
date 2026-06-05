@@ -13,6 +13,7 @@ export default async function PerfilPage() {
   }
 
   let userData = null;
+  let error: Error | null = null;
 
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -27,15 +28,17 @@ export default async function PerfilPage() {
     if (response.ok) {
       userData = await response.json();
     } else if (response.status === 401) {
-      redirect("/login");
+      error = new Error("Sessão expirada");
+    } else {
+      error = new Error("Erro ao buscar usuário");
     }
-  } catch (error) {
-    console.error("Erro ao buscar dados do usuário:", error);
-    redirect("/login");
+  } catch (err) {
+    console.error("Erro ao buscar dados do usuário:", err);
+    error = err instanceof Error ? err : new Error("Erro desconhecido");
   }
 
-  if (!userData) {
-    console.error("Dados do usuário não encontrados ou inválidos");
+  // Redirecionar apenas após o try-catch
+  if (!userData || error) {
     redirect("/login");
   }
 

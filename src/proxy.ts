@@ -107,14 +107,3 @@ export async function proxy(request: NextRequest) {
     },
   });
 }
-
-// Configurar as rotas onde o middleware deve rodar
-export const config = {
-  matcher: [
-    "/api/v1/user/:path*",
-    "/api/v1/logout/:path*",
-    "/api/v1/user",
-    "/api/v1/posts/:path*",
-    "/api/v1/posts",
-  ],
-};

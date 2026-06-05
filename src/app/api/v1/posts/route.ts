@@ -21,8 +21,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Buscar todos os posts ordenados por data de criação (mais recentes primeiro)
+    // Buscar apenas os posts do usuário logado, ordenados por data de criação (mais recentes primeiro)
     const posts = await db.post.findMany({
+      where: {
+        userId: userIdFromMiddleware,
+      },
       orderBy: {
         createdAt: "desc",
       },
