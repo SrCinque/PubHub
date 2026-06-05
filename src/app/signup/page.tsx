@@ -54,7 +54,12 @@ export default function SignUp() {
 
             // Enviar apenas dados básicos como JSON
             // Upload de foto é feito depois na tela de perfil
-            const response = await fetch("/api/v1/user", {
+            const apiUrl =
+                typeof window === "undefined"
+                    ? process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+                    : "";
+            const url = apiUrl ? `${apiUrl}/api/v1/user` : "/api/v1/user";
+            const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

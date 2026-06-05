@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import authService from "@/services/authService";
-import db from "@/infra/db";
+import db from "infra/db";
 
 /**
  * POST /api/v1/auth

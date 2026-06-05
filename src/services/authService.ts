@@ -1,4 +1,4 @@
-import db from "@/infra/db";
+import db from "infra/db";
 import passwordModule from "@/models/password";
 import jwt from "jsonwebtoken";
 

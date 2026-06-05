@@ -1,7 +1,7 @@
 // src/lib/db.ts
-import { PrismaClient } from '../app/generated/prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool } from 'pg';
+import { PrismaClient } from "../src/app/generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
 // Função para criar a instância do Prisma com o adaptador do PostgreSQL
 const prismaClientSingleton = () => {
@@ -24,4 +24,4 @@ const db = globalThis.prismaGlobal ?? prismaClientSingleton();
 export default db;
 
 // Em desenvolvimento, salvamos a instância no objeto global para o Fast Refresh do Next.js não criar novas conexões
-if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = db;
+if (process.env.NODE_ENV !== "production") globalThis.prismaGlobal = db;

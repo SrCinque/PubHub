@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
-import db from "@/infra/db";
+import db from "infra/db";
 import { LogoutButton } from "./LogoutButton";
 
 export default async function Header() {
@@ -59,7 +59,6 @@ export default async function Header() {
           </Link>
           <LogoutButton />
         </div>
-
       </div>
     </nav>
   );

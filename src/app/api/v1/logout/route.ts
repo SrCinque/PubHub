@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import db from "@/infra/db";
+import db from "infra/db";
 
 /**
  * DELETE /api/v1/logout

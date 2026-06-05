@@ -15,7 +15,8 @@ export default async function PerfilPage() {
   let userData = null;
 
   try {
-    const response = await fetch(`/api/v1/user`, {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+    const response = await fetch(`${apiUrl}/api/v1/user`, {
       method: "GET",
       headers: {
         Cookie: `session_token=${sessionToken}`,

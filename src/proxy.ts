@@ -7,7 +7,7 @@ interface JWTPayload {
 }
 
 /**
- * Middleware que atua como Auth Guard
+ * Proxy que atua como Auth Guard
  *
  * Fluxo:
  * 1. Intercepta requisições nas rotas protegidas
@@ -34,6 +34,9 @@ export async function proxy(request: NextRequest) {
   // Todas as rotas /api/v1/logout exigem autenticação
   const isLogoutRoute = pathname.startsWith("/api/v1/logout");
 
+  // Todas as rotas /api/v1/posts exigem autenticação
+  const isPostsRoute = pathname.startsWith("/api/v1/posts");
+
   // Outras operações em /api/v1/user (GET, PATCH, DELETE) exigem autenticação
   const isUserAuthRoute =
     pathname === "/api/v1/user" &&
@@ -47,7 +50,7 @@ export async function proxy(request: NextRequest) {
 
   // Verificar se é uma rota que requer autenticação
   const isProtectedRoute =
-    isUserAuthRoute || isUserUploadRoute || isLogoutRoute;
+    isUserAuthRoute || isUserUploadRoute || isLogoutRoute || isPostsRoute;
 
   // Se não for rota protegida, continuar normalmente
   if (!isProtectedRoute) {
@@ -107,5 +110,11 @@ export async function proxy(request: NextRequest) {
 
 // Configurar as rotas onde o middleware deve rodar
 export const config = {
-  matcher: ["/api/v1/user/:path*", "/api/v1/logout/:path*", "/api/v1/user"],
+  matcher: [
+    "/api/v1/user/:path*",
+    "/api/v1/logout/:path*",
+    "/api/v1/user",
+    "/api/v1/posts/:path*",
+    "/api/v1/posts",
+  ],
 };
