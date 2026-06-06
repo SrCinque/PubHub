@@ -12,10 +12,11 @@ interface RouteParams {
  * Recupera um post específico
  */
 export async function GET(request: NextRequest, { params }: RouteParams) {
+  const { id } = await params;
+
   try {
     const headersList = await headers();
     const userIdFromMiddleware = headersList.get("x-user-id");
-    const { id } = await params;
 
     // Validar se há sessão ativa
     if (!userIdFromMiddleware) {
@@ -67,10 +68,11 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
  * - Erro se não autorizado, post não encontrado, ou dados inválidos
  */
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
+  const { id } = await params;
+
   try {
     const headersList = await headers();
     const userIdFromMiddleware = headersList.get("x-user-id");
-    const { id } = await params;
 
     // Validar se há sessão ativa
     if (!userIdFromMiddleware) {
@@ -130,7 +132,10 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       imageUrl = body.imageUrl as string | null;
     } else {
       return NextResponse.json(
-        { error: "Content-Type deve ser multipart/form-data ou application/json" },
+        {
+          error:
+            "Content-Type deve ser multipart/form-data ou application/json",
+        },
         { status: 400 },
       );
     }
@@ -159,7 +164,8 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     // Validar e adicionar imageUrl se fornecido
     if (imageUrl !== null && imageUrl !== undefined) {
-      updateData.imageUrl = imageUrl.trim().length === 0 ? null : imageUrl.trim();
+      updateData.imageUrl =
+        imageUrl.trim().length === 0 ? null : imageUrl.trim();
     }
 
     // Se houver arquivo, fazer upload
@@ -236,10 +242,11 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
  * - Erro se não autorizado, post não encontrado, ou dados inválidos
  */
 export async function PUT(request: NextRequest, { params }: RouteParams) {
+  const { id } = await params;
+
   try {
     const headersList = await headers();
     const userIdFromMiddleware = headersList.get("x-user-id");
-    const { id } = await params;
 
     // Validar se há sessão ativa
     if (!userIdFromMiddleware) {
@@ -291,7 +298,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       const formData = await request.formData();
       content = formData.get("content") as string | null;
       file = formData.get("file") as File | null;
-      imageUrl = formData.get("imageUrl") as string | null || imageUrl;
+      imageUrl = (formData.get("imageUrl") as string | null) || imageUrl;
     } else if (contentType.includes("application/json")) {
       // Parse JSON
       const body = await request.json();
@@ -299,7 +306,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       imageUrl = body.imageUrl as string | null;
     } else {
       return NextResponse.json(
-        { error: "Content-Type deve ser multipart/form-data ou application/json" },
+        {
+          error:
+            "Content-Type deve ser multipart/form-data ou application/json",
+        },
         { status: 400 },
       );
     }
@@ -382,10 +392,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
  * Deleta um post (apenas o autor pode deletar)
  */
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
+  const { id } = await params;
+
   try {
     const headersList = await headers();
     const userIdFromMiddleware = headersList.get("x-user-id");
-    const { id } = await params;
 
     // Validar se há sessão ativa
     if (!userIdFromMiddleware) {
@@ -440,7 +451,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       { status: 200 },
     );
   } catch (error) {
-    console.error(`[DELETE /api/v1/posts] Erro:`, error);
+    console.error(`[DELETE /api/v1/posts/${id}] Erro:`, error);
     return NextResponse.json(
       { error: "Erro ao deletar post" },
       { status: 500 },

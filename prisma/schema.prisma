@@ -81,6 +81,7 @@ model PostDestination {
   externalPostId String?    // ID retornado pela API da rede social (link do post)
   errorMessage   String?    @db.Text
   sentAt         DateTime?
+  createdAt      DateTime   @default(now())
 
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 }

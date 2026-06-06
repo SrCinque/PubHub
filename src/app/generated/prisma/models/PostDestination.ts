@@ -32,6 +32,7 @@ export type PostDestinationMinAggregateOutputType = {
   externalPostId: string | null
   errorMessage: string | null
   sentAt: Date | null
+  createdAt: Date | null
 }
 
 export type PostDestinationMaxAggregateOutputType = {
@@ -42,6 +43,7 @@ export type PostDestinationMaxAggregateOutputType = {
   externalPostId: string | null
   errorMessage: string | null
   sentAt: Date | null
+  createdAt: Date | null
 }
 
 export type PostDestinationCountAggregateOutputType = {
@@ -52,6 +54,7 @@ export type PostDestinationCountAggregateOutputType = {
   externalPostId: number
   errorMessage: number
   sentAt: number
+  createdAt: number
   _all: number
 }
 
@@ -64,6 +67,7 @@ export type PostDestinationMinAggregateInputType = {
   externalPostId?: true
   errorMessage?: true
   sentAt?: true
+  createdAt?: true
 }
 
 export type PostDestinationMaxAggregateInputType = {
@@ -74,6 +78,7 @@ export type PostDestinationMaxAggregateInputType = {
   externalPostId?: true
   errorMessage?: true
   sentAt?: true
+  createdAt?: true
 }
 
 export type PostDestinationCountAggregateInputType = {
@@ -84,6 +89,7 @@ export type PostDestinationCountAggregateInputType = {
   externalPostId?: true
   errorMessage?: true
   sentAt?: true
+  createdAt?: true
   _all?: true
 }
 
@@ -167,6 +173,7 @@ export type PostDestinationGroupByOutputType = {
   externalPostId: string | null
   errorMessage: string | null
   sentAt: Date | null
+  createdAt: Date
   _count: PostDestinationCountAggregateOutputType | null
   _min: PostDestinationMinAggregateOutputType | null
   _max: PostDestinationMaxAggregateOutputType | null
@@ -198,6 +205,7 @@ export type PostDestinationWhereInput = {
   externalPostId?: Prisma.StringNullableFilter<"PostDestination"> | string | null
   errorMessage?: Prisma.StringNullableFilter<"PostDestination"> | string | null
   sentAt?: Prisma.DateTimeNullableFilter<"PostDestination"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"PostDestination"> | Date | string
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
 }
 
@@ -209,6 +217,7 @@ export type PostDestinationOrderByWithRelationInput = {
   externalPostId?: Prisma.SortOrderInput | Prisma.SortOrder
   errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   post?: Prisma.PostOrderByWithRelationInput
 }
 
@@ -223,6 +232,7 @@ export type PostDestinationWhereUniqueInput = Prisma.AtLeast<{
   externalPostId?: Prisma.StringNullableFilter<"PostDestination"> | string | null
   errorMessage?: Prisma.StringNullableFilter<"PostDestination"> | string | null
   sentAt?: Prisma.DateTimeNullableFilter<"PostDestination"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"PostDestination"> | Date | string
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
 }, "id">
 
@@ -234,6 +244,7 @@ export type PostDestinationOrderByWithAggregationInput = {
   externalPostId?: Prisma.SortOrderInput | Prisma.SortOrder
   errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   _count?: Prisma.PostDestinationCountOrderByAggregateInput
   _max?: Prisma.PostDestinationMaxOrderByAggregateInput
   _min?: Prisma.PostDestinationMinOrderByAggregateInput
@@ -250,6 +261,7 @@ export type PostDestinationScalarWhereWithAggregatesInput = {
   externalPostId?: Prisma.StringNullableWithAggregatesFilter<"PostDestination"> | string | null
   errorMessage?: Prisma.StringNullableWithAggregatesFilter<"PostDestination"> | string | null
   sentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PostDestination"> | Date | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"PostDestination"> | Date | string
 }
 
 export type PostDestinationCreateInput = {
@@ -259,6 +271,7 @@ export type PostDestinationCreateInput = {
   externalPostId?: string | null
   errorMessage?: string | null
   sentAt?: Date | string | null
+  createdAt?: Date | string
   post: Prisma.PostCreateNestedOneWithoutDestinationsInput
 }
 
@@ -270,6 +283,7 @@ export type PostDestinationUncheckedCreateInput = {
   externalPostId?: string | null
   errorMessage?: string | null
   sentAt?: Date | string | null
+  createdAt?: Date | string
 }
 
 export type PostDestinationUpdateInput = {
@@ -279,6 +293,7 @@ export type PostDestinationUpdateInput = {
   externalPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   post?: Prisma.PostUpdateOneRequiredWithoutDestinationsNestedInput
 }
 
@@ -290,6 +305,7 @@ export type PostDestinationUncheckedUpdateInput = {
   externalPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PostDestinationCreateManyInput = {
@@ -300,6 +316,7 @@ export type PostDestinationCreateManyInput = {
   externalPostId?: string | null
   errorMessage?: string | null
   sentAt?: Date | string | null
+  createdAt?: Date | string
 }
 
 export type PostDestinationUpdateManyMutationInput = {
@@ -309,6 +326,7 @@ export type PostDestinationUpdateManyMutationInput = {
   externalPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PostDestinationUncheckedUpdateManyInput = {
@@ -319,6 +337,7 @@ export type PostDestinationUncheckedUpdateManyInput = {
   externalPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PostDestinationListRelationFilter = {
@@ -339,6 +358,7 @@ export type PostDestinationCountOrderByAggregateInput = {
   externalPostId?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type PostDestinationMaxOrderByAggregateInput = {
@@ -349,6 +369,7 @@ export type PostDestinationMaxOrderByAggregateInput = {
   externalPostId?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type PostDestinationMinOrderByAggregateInput = {
@@ -359,6 +380,7 @@ export type PostDestinationMinOrderByAggregateInput = {
   externalPostId?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type PostDestinationCreateNestedManyWithoutPostInput = {
@@ -414,6 +436,7 @@ export type PostDestinationCreateWithoutPostInput = {
   externalPostId?: string | null
   errorMessage?: string | null
   sentAt?: Date | string | null
+  createdAt?: Date | string
 }
 
 export type PostDestinationUncheckedCreateWithoutPostInput = {
@@ -423,6 +446,7 @@ export type PostDestinationUncheckedCreateWithoutPostInput = {
   externalPostId?: string | null
   errorMessage?: string | null
   sentAt?: Date | string | null
+  createdAt?: Date | string
 }
 
 export type PostDestinationCreateOrConnectWithoutPostInput = {
@@ -462,6 +486,7 @@ export type PostDestinationScalarWhereInput = {
   externalPostId?: Prisma.StringNullableFilter<"PostDestination"> | string | null
   errorMessage?: Prisma.StringNullableFilter<"PostDestination"> | string | null
   sentAt?: Prisma.DateTimeNullableFilter<"PostDestination"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"PostDestination"> | Date | string
 }
 
 export type PostDestinationCreateManyPostInput = {
@@ -471,6 +496,7 @@ export type PostDestinationCreateManyPostInput = {
   externalPostId?: string | null
   errorMessage?: string | null
   sentAt?: Date | string | null
+  createdAt?: Date | string
 }
 
 export type PostDestinationUpdateWithoutPostInput = {
@@ -480,6 +506,7 @@ export type PostDestinationUpdateWithoutPostInput = {
   externalPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PostDestinationUncheckedUpdateWithoutPostInput = {
@@ -489,6 +516,7 @@ export type PostDestinationUncheckedUpdateWithoutPostInput = {
   externalPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PostDestinationUncheckedUpdateManyWithoutPostInput = {
@@ -498,6 +526,7 @@ export type PostDestinationUncheckedUpdateManyWithoutPostInput = {
   externalPostId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -510,6 +539,7 @@ export type PostDestinationSelect<ExtArgs extends runtime.Types.Extensions.Inter
   externalPostId?: boolean
   errorMessage?: boolean
   sentAt?: boolean
+  createdAt?: boolean
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["postDestination"]>
 
@@ -521,6 +551,7 @@ export type PostDestinationSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   externalPostId?: boolean
   errorMessage?: boolean
   sentAt?: boolean
+  createdAt?: boolean
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["postDestination"]>
 
@@ -532,6 +563,7 @@ export type PostDestinationSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   externalPostId?: boolean
   errorMessage?: boolean
   sentAt?: boolean
+  createdAt?: boolean
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["postDestination"]>
 
@@ -543,9 +575,10 @@ export type PostDestinationSelectScalar = {
   externalPostId?: boolean
   errorMessage?: boolean
   sentAt?: boolean
+  createdAt?: boolean
 }
 
-export type PostDestinationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "postId" | "platform" | "status" | "externalPostId" | "errorMessage" | "sentAt", ExtArgs["result"]["postDestination"]>
+export type PostDestinationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "postId" | "platform" | "status" | "externalPostId" | "errorMessage" | "sentAt" | "createdAt", ExtArgs["result"]["postDestination"]>
 export type PostDestinationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
 }
@@ -569,6 +602,7 @@ export type $PostDestinationPayload<ExtArgs extends runtime.Types.Extensions.Int
     externalPostId: string | null
     errorMessage: string | null
     sentAt: Date | null
+    createdAt: Date
   }, ExtArgs["result"]["postDestination"]>
   composites: {}
 }
@@ -1000,6 +1034,7 @@ export interface PostDestinationFieldRefs {
   readonly externalPostId: Prisma.FieldRef<"PostDestination", 'String'>
   readonly errorMessage: Prisma.FieldRef<"PostDestination", 'String'>
   readonly sentAt: Prisma.FieldRef<"PostDestination", 'DateTime'>
+  readonly createdAt: Prisma.FieldRef<"PostDestination", 'DateTime'>
 }
     
 

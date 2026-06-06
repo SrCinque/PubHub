@@ -24,9 +24,23 @@ export interface UpdatePostData {
   file?: File;
 }
 
+export interface PostDestination {
+  id: string;
+  postId: string;
+  platform: string;
+  status: "PENDING" | "SUCCESS" | "FAILED";
+  externalPostId: string | null;
+  errorMessage: string | null;
+  sentAt: string | null;
+  createdAt?: string;
+}
+
 const getApiUrl = () => {
   if (typeof window === "undefined") {
-    return (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000") + "/api/v1/posts";
+    return (
+      (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000") +
+      "/api/v1/posts"
+    );
   }
   return "/api/v1/posts";
 };
@@ -82,7 +96,7 @@ export const postService = {
 
   async create(data: CreatePostData | FormData): Promise<Post> {
     const API_URL = getApiUrl();
-    
+
     let body: any;
     let headers: Record<string, string> = {};
 
@@ -110,7 +124,7 @@ export const postService = {
 
   async update(id: string, data: UpdatePostData | FormData): Promise<Post> {
     const API_URL = getApiUrl();
-    
+
     let body: any;
     let headers: Record<string, string> = {};
 
@@ -148,5 +162,55 @@ export const postService = {
       const error = await response.json();
       throw new Error(error.error || "Erro ao deletar post");
     }
+  },
+
+  // ========== DESTINOS DE PUBLICAÇÃO ==========
+
+  async getDestinations(
+    postId: string,
+    sessionToken?: string,
+  ): Promise<PostDestination[]> {
+    const API_URL = getApiUrl();
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+
+    if (sessionToken) {
+      headers["Cookie"] = `session_token=${sessionToken}`;
+    }
+
+    const response = await fetch(`${API_URL}/${postId}/destinations`, {
+      method: "GET",
+      headers,
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Erro ao buscar destinos de publicação");
+    }
+
+    return response.json();
+  },
+
+  async createDestinations(
+    postId: string,
+    platforms: string[],
+  ): Promise<PostDestination[]> {
+    const API_URL = getApiUrl();
+    const response = await fetch(`${API_URL}/${postId}/destinations`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ platforms }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Erro ao criar destinos de publicação");
+    }
+
+    return response.json();
   },
 };

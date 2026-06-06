@@ -879,7 +879,8 @@ export const PostDestinationScalarFieldEnum = {
   status: 'status',
   externalPostId: 'externalPostId',
   errorMessage: 'errorMessage',
-  sentAt: 'sentAt'
+  sentAt: 'sentAt',
+  createdAt: 'createdAt'
 } as const
 
 export type PostDestinationScalarFieldEnum = (typeof PostDestinationScalarFieldEnum)[keyof typeof PostDestinationScalarFieldEnum]

@@ -100,7 +100,10 @@ export async function POST(request: NextRequest) {
       imageUrl = body.imageUrl as string | null;
     } else {
       return NextResponse.json(
-        { error: "Content-Type deve ser multipart/form-data ou application/json" },
+        {
+          error:
+            "Content-Type deve ser multipart/form-data ou application/json",
+        },
         { status: 400 },
       );
     }
@@ -167,9 +170,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(newPost, { status: 201 });
   } catch (error) {
     console.error("[POST /api/v1/posts] Erro:", error);
-    return NextResponse.json(
-      { error: "Erro ao criar post" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Erro ao criar post" }, { status: 500 });
   }
 }
